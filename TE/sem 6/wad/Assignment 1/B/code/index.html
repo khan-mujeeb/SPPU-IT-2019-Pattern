@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 2</title>
+</head>
+<body>
+    <form>
+        <input type="text" id="name" placeholder="Enter your name"/>
+
+        <input type="email" id="email" placeholder="Enter your Email">
+
+        <input type="number" id="phonenumber" placeholder="Enter your number"/>
+
+        <input type="password" id="password" placeholder="Enter your Password"/>
+
+        <button onclick="load()">Register</button>
+        
+    </form>
+
+    <button ><a href="./user.html">Show Users</a></button>
+
+
+
+    **************imp************************
+    <script>
+        function load() {
+            var name = document.getElementById("name").value
+            var email = document.getElementById("email").value
+            var phonenumber = document.getElementById("phonenumber").value
+
+            var userData = {
+                name: name,
+                email: email,
+                phonenumber: phonenumber
+            }
+
+            // console.log(userData);
+            var req = new XMLHttpRequest();
+
+            req.open("POST", "https://jsonplaceholder.typicode.com/posts", true);
+            req.setRequestHeader("Content-Type", "application/json");
+
+            var storedData =
+                    JSON.parse(localStorage.getItem("userData")) || [];
+                storedData.push(userData);
+                localStorage.setItem("userData", JSON.stringify(storedData));
+
+            req.send(JSON.stringify(userData));
+            console.log(userData);
+        }
+    </script>
+</body>
+</html>

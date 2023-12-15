@@ -1,0 +1,264 @@
+hive> create database Harshu;
+OK
+Time taken: 0.047 seconds
+
+hive> use harshu;
+OK
+Time taken: 0.025 secondsCO
+
+
+********************************************************a*************************************************************
+hive> create table if not exists student(stid int, stname String, staddress String);
+OK
+Time taken: 0.076 seconds
+
+
+hive> insert into student values (123, "Harshad","Pune");
+OK
+Time taken: 15.603 seconds
+
+
+hive> select * from student;
+OK
+123	Harshad	Pune
+Time taken: 0.057 seconds, Fetched: 1 row(s)
+
+
+hive> alter table student change stname studentname String;
+OK
+Time taken: 0.244 seconds
+
+
+hive> desc student;
+OK
+stid                	int                 	                    
+studentname         	string              	                    
+staddress           	string              	                    
+Time taken: 0.102 seconds, Fetched: 3 row(s)
+
+
+
+hive> alter table student add columns(stdage int);
+OK
+Time taken: 0.115 seconds
+
+
+hive> alter table student change studentname studentname varchar(20);
+OK
+Time taken: 0.123 seconds
+
+
+
+hive> desc student;
+OK
+stid                	int                 	                    
+studentname         	varchar(20)         	                    
+staddress           	string              	                    
+stdage              	int                 	                    
+Time taken: 0.04 seconds, Fetched: 4 row(s)
+hive> drop table student;
+OK
+Time taken: 0.253 seconds
+
+
+
+
+**********************************************************b***********************************************************
+
+hive> create external table if not exists emp(empid int,empname String,empadd String)
+    > row format delimited
+    > fields terminated by ','
+    > lines terminated by '\n'
+    > stored as textfile;
+OK
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+**********************************************************c*****************************************************************
+
+hive> create table if not exists flightinfo2007new(Year SMALLINT,Month TINYINT,DayofMonth TINYINT,DayOfWeek TINYINT,DepTime SMALLINT,CRSDepTime SMALLINT,ArrTime SMALLINT,CRSArrTime SMALLINT,UniqueCarrier STRING,FlightNum STRING,TailNum STRING,ActualElapsedTime SMALLINT,CRSElapsedTime SMALLINT,AirTime SMALLINT,ArrDelay SMALLINT,DepDelay SMALLINT,Origin STRING,Dest STRING,Distance INT,TaxiIn SMALLINT,TaxiOut SMALLINT,Cancelled SMALLINT,CancellationCode STRING,Diverted SMALLINT,CarrierDelay SMALLINT,WeatherDelay SMALLINT,NASDelay SMALLINT,SecurityDelay SMALLINT,LateAircraftDelay SMALLINT)
+    > ROW FORMAT DELIMITED
+    > FIELDS TERMINATED BY ','
+    > LINES TERMINATED BY '\n'
+    > STORED AS TEXTFILE;
+OK
+Time taken: 0.236 seconds
+
+
+
+hive> load data local inpath "/home/cloudera/Downloads/2007m.csv" into table flightinfo2007new;
+Loading data to table default.flightinfo2007new
+Table default.flightinfo2007new stats: [numFiles=1, totalSize=10873]
+OK
+Time taken: 0.593 seconds
+
+
+hive> CREATE TABLE IF NOT EXISTS FLIGHTINFO2008new LIKE  FLIGHTINFO2007new;
+OK
+Time taken: 0.196 seconds
+
+
+hive> load data local inpath "/home/cloudera/Downloads/2008m.csv" into table flightinfo2008new;
+Loading data to table default.flightinfo2008new
+Table default.flightinfo2008new stats: [numFiles=1, totalSize=30398]
+OK
+Time taken: 0.543 seconds
+
+
+hive> create table view07new as select Year,Month,DayofMonth,DayOfWeek,DepTime from flightinfo2007new where TaxiIn=3;
+Query ID = cloudera_20230527125656_adcbbf45-bc9a-464f-b91d-446fe5a53693
+Total jobs = 3
+Launching Job 1 out of 3
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_1685209754614_0006, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1685209754614_0006/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1685209754614_0006
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 0
+2023-05-27 12:56:18,079 Stage-1 map = 0%,  reduce = 0%
+2023-05-27 12:56:25,624 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.29 sec
+MapReduce Total cumulative CPU time: 1 seconds 290 msec
+Ended Job = job_1685209754614_0006
+Stage-4 is selected by condition resolver.
+Stage-3 is filtered out by condition resolver.
+Stage-5 is filtered out by condition resolver.
+Moving data to: hdfs://quickstart.cloudera:8020/user/hive/warehouse/.hive-staging_hive_2023-05-27_12-56-08_939_8970069223801215111-1/-ext-10001
+Moving data to: hdfs://quickstart.cloudera:8020/user/hive/warehouse/view07new
+Table default.view07new stats: [numFiles=1, numRows=29, totalSize=456, rawDataSize=427]
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1   Cumulative CPU: 1.29 sec   HDFS Read: 17173 HDFS Write: 530 SUCCESS
+Total MapReduce CPU Time Spent: 1 seconds 290 msec
+OK
+Time taken: 17.968 seconds
+
+
+
+
+hive> create table view08new as select Year,Month,DayofMonth,DayOfWeek,DepTime from flightinfo2008new where TaxiIn=3;
+Query ID = cloudera_20230527125757_6d77d3d9-86f6-4c25-abb2-5b013a047818
+Total jobs = 3
+Launching Job 1 out of 3
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_1685209754614_0007, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1685209754614_0007/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1685209754614_0007
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 0
+2023-05-27 12:57:57,859 Stage-1 map = 0%,  reduce = 0%
+2023-05-27 12:58:04,423 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.21 sec
+MapReduce Total cumulative CPU time: 1 seconds 210 msec
+Ended Job = job_1685209754614_0007
+Stage-4 is selected by condition resolver.
+Stage-3 is filtered out by condition resolver.
+Stage-5 is filtered out by condition resolver.
+Moving data to: hdfs://quickstart.cloudera:8020/user/hive/warehouse/.hive-staging_hive_2023-05-27_12-57-49_719_232962326745214958-1/-ext-10001
+Moving data to: hdfs://quickstart.cloudera:8020/user/hive/warehouse/view08new
+Table default.view08new stats: [numFiles=1, numRows=67, totalSize=1048, rawDataSize=981]
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1   Cumulative CPU: 1.21 sec   HDFS Read: 36694 HDFS Write: 1122 SUCCESS
+Total MapReduce CPU Time Spent: 1 seconds 210 msec
+OK
+Time taken: 16.134 seconds
+hive> select * from view07new;
+OK
+2007	1	1	1	1230
+2007	1	1	1	831
+2007	1	1	1	2128
+2007	1	1	1	1729
+2007	1	1	1	825
+2007	1	1	1	1726
+
+Time taken: 0.064 seconds, Fetched: 29 row(s)
+
+
+
+hive> select * from view08new;
+OK
+2008	1	3	4	1125
+2008	1	3	4	1758
+2008	1	3	4	2210
+2008	1	3	4	740
+2008	1	3	4	641
+2008	1	3	4	929
+2008	1	3	4	1214
+2008	1	3	4	904
+2008	1	3	4	926
+
+Time taken: 0.1 seconds, Fetched: 67 row(s)
+hive> select m7.Year,m7.Month,m7.DayofMonth,m7.DayOfWeek,m7.DepTime,m8.Year,m8.Month,m8.DayofMonth,m8.DayOfWeek,m8.DepTime from viewo7new m7 FULL OUTER JOIN view08new m8 ON m7.Month=m8.MOnth;
+
+2007	1	1	1	2219	2008	1	3	4	2139
+2007	1	1	1	2219	2008	1	3	4	948
+2007	1	1	1	2219	2008	1	3	4	2025
+2007	1	1	1	2219	2008	1	3	4	1150
+2007	1	1	1	2219	2008	1	3	4	2245
+2007	1	1	1	2219	2008	1	3	4	634
+2007	1	1	1	2219	2008	1	3	4	646
+2007	1	1	1	2219	2008	1	3	4	1954
+2007	1	1	1	2219	2008	1	3	4	801
+2007	1	1	1	2219	2008	1	3	4	706
+2007	1	1	1	2219	2008	1	3	4	1620
+2007	1	1	1	2219	2008	1	3	4	1937
+2007	1	1	1	2219	2008	1	3	4	1829
+
+
+
+
+
+**************************************************************d****************************************************
+Time taken: 35.743 seconds, Fetched: 1943 row(s)
+hive> create index abc_index on table view08new(month) as "compact" with deferred rebuild;
+OK
+Time taken: 0.21 seconds
+
+
+hive> show indexes on view07new;
+OK
+abc_index           	view07new           	month               	default__view07new_abc_index__	compact             	
+Time taken: 1.209 seconds, Fetched: 1 row(s)
+
+
+
+*********************************************************e*******************************************************
+hive> hive> create view  avgdepdelay as select dayofweek,avg(depdelay) from flightinfo2008new group by dayofweek;
+OK
+Time taken: 0.21 seconds
+
+
+
+hive> select * from avgdepdelay;
+Query ID = cloudera_20230527131818_1c4c7d9d-5ae5-4057-9fd8-1ea774b6a100
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1685209754614_0011, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1685209754614_0011/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1685209754614_0011
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2023-05-27 13:18:09,422 Stage-1 map = 0%,  reduce = 0%
+2023-05-27 13:18:15,900 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 0.91 sec
+2023-05-27 13:18:24,464 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 1.98 sec
+MapReduce Total cumulative CPU time: 1 seconds 980 msec
+Ended Job = job_1685209754614_0011
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 1.98 sec   HDFS Read: 42672 HDFS Write: 21 SUCCESS
+Total MapReduce CPU Time Spent: 1 seconds 980 msec
+OK
+4	27.686708860759495
+Time taken: 23.866 seconds, Fetched: 1 row(s)
+hive> 
+
+
+
+
